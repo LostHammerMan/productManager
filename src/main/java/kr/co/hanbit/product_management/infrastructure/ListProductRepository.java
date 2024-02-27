@@ -34,6 +34,30 @@ public class ListProductRepository {
                 .orElseThrow(() ->new RuntimeException("찾으려는 상품이 존재하지 않습니다"));
     }
 
+    // 전체 상품 조회
+    public List<Product> findAll(){
+        return products;
+    }
+
+    // 상품 검색 - 이름
+    public List<Product> findByNameContaining(String name){
+        return products.stream().filter(product -> product.containsName(name)).toList();
+    }
 
 
+    public Product update(Product product) {
+        log.info("repository called........");
+        log.info("\t product = {}", product);
+        Integer indexToModify = products.indexOf(product);
+        log.info("\t indexToModify = {}", indexToModify);
+
+        products.set(indexToModify, product);
+
+        return product;
+    }
+
+    public void delete(Long id) {
+        Product findProduct = this.findById(id);
+        products.remove(findProduct);
+    }
 }

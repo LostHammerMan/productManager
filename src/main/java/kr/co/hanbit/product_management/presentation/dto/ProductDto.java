@@ -1,8 +1,11 @@
 package kr.co.hanbit.product_management.presentation.dto;
 
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@Builder
 public class ProductDto {
 
     private Long id;
