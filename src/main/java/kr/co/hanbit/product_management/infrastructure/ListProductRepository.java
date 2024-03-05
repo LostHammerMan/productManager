@@ -1,7 +1,10 @@
 package kr.co.hanbit.product_management.infrastructure;
 
 import kr.co.hanbit.product_management.domain.Product;
+import kr.co.hanbit.product_management.domain.exception.EntityNotFoundException;
+import kr.co.hanbit.product_management.domain.repository_interface.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,7 +14,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 @Slf4j
-public class ListProductRepository {
+@Profile("test")
+public class ListProductRepository implements ProductRepository {
 
     private List<Product> products = new CopyOnWriteArrayList<>();
 
@@ -31,7 +35,7 @@ public class ListProductRepository {
     public Product findById(Long id){
         return products.stream().filter(product -> product.sameId(id))
                 .findFirst()
-                .orElseThrow(() ->new RuntimeException("찾으려는 상품이 존재하지 않습니다"));
+                .orElseThrow(() ->new EntityNotFoundException("찾으려는 상품이 존재하지 않습니다"));
     }
 
     // 전체 상품 조회

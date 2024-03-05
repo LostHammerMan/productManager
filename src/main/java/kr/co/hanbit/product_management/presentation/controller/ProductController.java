@@ -1,5 +1,6 @@
 package kr.co.hanbit.product_management.presentation.controller;
 
+import jakarta.validation.Valid;
 import kr.co.hanbit.product_management.application.SimpleProductService;
 import kr.co.hanbit.product_management.domain.Product;
 import kr.co.hanbit.product_management.presentation.dto.ProductDto;
@@ -18,8 +19,9 @@ public class ProductController {
 
     // 상품 추가 요청
     @PostMapping("/products")
-    public ProductDto createProduct(@RequestBody ProductDto productDto){
+    public ProductDto createProduct(@Valid @RequestBody ProductDto productDto){
         log.info("controller createProduct called....");
+        log.info("\t productDto = {}", productDto);
         simpleProductService.add(productDto);
         return productDto;
     }

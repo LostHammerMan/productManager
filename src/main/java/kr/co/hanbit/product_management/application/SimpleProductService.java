@@ -1,6 +1,8 @@
 package kr.co.hanbit.product_management.application;
 
 import kr.co.hanbit.product_management.domain.Product;
+import kr.co.hanbit.product_management.domain.repository_interface.ProductRepository;
+import kr.co.hanbit.product_management.infrastructure.DatabaseProductRepository;
 import kr.co.hanbit.product_management.infrastructure.ListProductRepository;
 import kr.co.hanbit.product_management.presentation.dto.ProductDto;
 import kr.co.hanbit.product_management.presentation.dto.ProductMapper;
@@ -16,22 +18,27 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class SimpleProductService {
-    private final ListProductRepository listProductRepository;
+//    private final ListProductRepository listProductRepository;
     private final ModelMapper modelMapper;
     private final ProductMapper2 productMapper2;
     private final ProductMapper productMapper;
+    private final ValidationService validationService;
+//    private final DatabaseProductRepository databaseProductRepository;
+    private final ProductRepository productRepository;
 
-    // 상품 추가
+    // 상품 추가 + validation
     public ProductDto add(ProductDto productDto){
         log.info("service add called.....");
+        log.info("\t productDto = {}", productDto);
 
         // 1. dto -> domain
 //        Product product = modelMapper.map(productDto, Product.class);
         Product product = productMapper.MAPPER.toEntity(productDto);
+        validationService.checkValid(product);
 //        Product product = productMapper.productDtoToProduct(productDto); // 문제 발생
         log.info("product = {}", product);
         // 2. repository 호출
-        Product savedProduct = listProductRepository.add(product);
+        Product savedProduct = productRepository.add(product);
 
         // 3. domain -> dto
 //        ProductDto savedProductDto = modelMapper.map(savedProduct, ProductDto.class);
@@ -45,7 +52,7 @@ public class SimpleProductService {
 
     // 상품 단건 조회
     public ProductDto findById(Long id){
-        Product findProduct = listProductRepository.findById(id);
+        Product findProduct = productRepository.findById(id);
 
         // entity -> dto
 //        ProductDto productDto = modelMapper.map(findProduct, ProductDto.class);
@@ -57,7 +64,7 @@ public class SimpleProductService {
     // 전체 상품 조회
     public List<ProductDto> findAll(){
         log.info("service called.......");
-        List<Product> products = listProductRepository.findAll();
+        List<Product> products = productRepository.findAll();
         for (Product a : products){
             log.info("products = {}", a);
         }
@@ -79,7 +86,7 @@ public class SimpleProductService {
 
     // 상품 검색 - 이름
     public List<ProductDto> findByNameContaining(String name){
-        List<Product> findProducts = listProductRepository.findByNameContaining(name);
+        List<Product> findProducts = productRepository.findByNameContaining(name);
 
         // 엔티티 -> dto
         List<ProductDto> productDtos = findProducts.stream().map(
@@ -98,7 +105,7 @@ public class SimpleProductService {
         Product product = productMapper.MAPPER.toEntity(productDto);
         log.info("\t product = {}", product);
 
-        Product updatedProduct = listProductRepository.update(product);
+        Product updatedProduct = productRepository.update(product);
         log.info("\t updatedProduct ={}", updatedProduct);
 
         // 엔티티 -> dto
@@ -111,6 +118,6 @@ public class SimpleProductService {
     }
 
     public void delete(Long id) {
-        listProductRepository.delete(id);
+        productRepository.delete(id);
     }
 }
