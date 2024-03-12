@@ -2,8 +2,6 @@ package kr.co.hanbit.product_management.application;
 
 import kr.co.hanbit.product_management.domain.Product;
 import kr.co.hanbit.product_management.domain.repository_interface.ProductRepository;
-import kr.co.hanbit.product_management.infrastructure.DatabaseProductRepository;
-import kr.co.hanbit.product_management.infrastructure.ListProductRepository;
 import kr.co.hanbit.product_management.presentation.dto.ProductDto;
 import kr.co.hanbit.product_management.presentation.dto.ProductMapper;
 import kr.co.hanbit.product_management.presentation.dto.ProductMapper2;
@@ -33,7 +31,8 @@ public class SimpleProductService {
 
         // 1. dto -> domain
 //        Product product = modelMapper.map(productDto, Product.class);
-        Product product = productMapper.MAPPER.toEntity(productDto);
+//        Product product = productMapper.MAPPER.toEntity(productDto);
+        Product product = ProductDto.toEntity(productDto);
         validationService.checkValid(product);
 //        Product product = productMapper.productDtoToProduct(productDto); // 문제 발생
         log.info("product = {}", product);
@@ -43,7 +42,8 @@ public class SimpleProductService {
         // 3. domain -> dto
 //        ProductDto savedProductDto = modelMapper.map(savedProduct, ProductDto.class);
 //        ProductDto savedProductDto = productMapper2.productToProductDto(savedProduct);
-        ProductDto savedProductDto = productMapper.MAPPER.toDto(savedProduct);
+//        ProductDto savedProductDto = productMapper.MAPPER.toDto(savedProduct);
+        ProductDto savedProductDto = ProductDto.toDto(savedProduct);
         log.info("savedProductDto = {}", savedProductDto);
         // 4. dto 반환
 
@@ -57,7 +57,8 @@ public class SimpleProductService {
         // entity -> dto
 //        ProductDto productDto = modelMapper.map(findProduct, ProductDto.class);
 //        ProductDto productDto = productMapper2.productToProductDto(findProduct);
-        ProductDto productDto = productMapper.MAPPER.toDto(findProduct);
+//        ProductDto productDto = productMapper.MAPPER.toDto(findProduct);
+        ProductDto productDto = ProductDto.toDto(findProduct);
         return productDto;
     }
 
@@ -75,7 +76,7 @@ public class SimpleProductService {
 //        List<ProductDto> productDtos = products.stream()
 //                .map(product -> productMapper2.productToProductDto(product)).toList();
         List<ProductDto> productDtos = products.stream()
-                .map(product -> productMapper.MAPPER.toDto(product))
+                .map(product -> ProductDto.toDto(product))
                 .toList();
 
         for (ProductDto b : productDtos){
@@ -90,7 +91,7 @@ public class SimpleProductService {
 
         // 엔티티 -> dto
         List<ProductDto> productDtos = findProducts.stream().map(
-                product -> productMapper.MAPPER.toDto(product)
+                product -> ProductDto.toDto(product)
         ).toList();
 
         return productDtos;
@@ -102,7 +103,8 @@ public class SimpleProductService {
 
         // dto -> entity
 //        Product product = productMapper2.productDtoToProduct(productDto);
-        Product product = productMapper.MAPPER.toEntity(productDto);
+//        Product product = productMapper.MAPPER.toEntity(productDto);
+        Product product = ProductDto.toEntity(productDto);
         log.info("\t product = {}", product);
 
         Product updatedProduct = productRepository.update(product);
@@ -110,7 +112,9 @@ public class SimpleProductService {
 
         // 엔티티 -> dto
 //        ProductDto updatedProductDto = productMapper2.productToProductDto(updatedProduct);
-        ProductDto updatedProductDto = productMapper.MAPPER.toDto(updatedProduct);
+//        ProductDto updatedProductDto = productMapper.MAPPER.toDto(updatedProduct);
+        ProductDto updatedProductDto = ProductDto.toDto(updatedProduct);
+
         log.info("\t updatedProductDto = {}", updatedProductDto);
 
         return updatedProductDto;
